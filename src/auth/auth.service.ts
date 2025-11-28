@@ -37,7 +37,7 @@ export class AuthService {
     private sessionService: SessionService,
     private mailService: MailService,
     private configService: ConfigService<AllConfigType>,
-  ) {}
+  ) { }
 
   async validateLogin(loginDto: AuthEmailLoginDto): Promise<LoginResponseDto> {
     const user = await this.usersService.findByEmail(loginDto.email);
@@ -219,12 +219,22 @@ export class AuthService {
       },
     );
 
-    await this.mailService.userSignUp({
-      to: dto.email,
-      data: {
-        hash,
-      },
-    });
+    // Send email asynchronously without blocking the response
+    // Using void operator to explicitly indicate fire-and-forget pattern
+    void this.mailService
+      .userSignUp({
+        to: dto.email,
+        data: {
+          hash,
+        },
+      })
+      .catch((error) => {
+        // Log the error but don't fail the registration
+        console.error('Failed to send confirmation email:', error);
+        // TODO: Consider implementing a retry mechanism or storing failed emails for later processing
+        // For now, the user is created but won't receive the confirmation email
+        // They can request a new confirmation email later
+      });
   }
 
   async confirmEmail(hash: string): Promise<void> {

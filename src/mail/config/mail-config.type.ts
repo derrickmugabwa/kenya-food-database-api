@@ -1,4 +1,5 @@
 export type MailConfig = {
+  provider: 'smtp' | 'inbound';
   port: number;
   host?: string;
   user?: string;
@@ -8,4 +9,5 @@ export type MailConfig = {
   ignoreTLS: boolean;
   secure: boolean;
   requireTLS: boolean;
+  inboundApiKey?: string;
 };
