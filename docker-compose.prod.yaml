@@ -1,0 +1,51 @@
+services:
+  # Redis (Optional - uncomment if needed)
+  # redis:
+  #   image: redis:7-alpine
+  #   restart: always
+  #   ports:
+  #     - 6379:6379
+  #   volumes:
+  #     - redis_data:/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    restart: always
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    environment:
+      - NODE_ENV=production
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_SSL_ENABLED=true
+      - DATABASE_REJECT_UNAUTHORIZED=false
+      - APP_PORT=${APP_PORT}
+      - BACKEND_DOMAIN=${BACKEND_DOMAIN}
+      - FRONTEND_DOMAIN=${FRONTEND_DOMAIN}
+      # Mail Configuration
+      - EMAIL_PROVIDER=${EMAIL_PROVIDER}
+      - INBOUND_API_KEY=${INBOUND_API_KEY}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USER=${MAIL_USER}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_SECURE=${MAIL_SECURE}
+      - MAIL_REQUIRE_TLS=${MAIL_REQUIRE_TLS}
+      - MAIL_DEFAULT_EMAIL=${MAIL_DEFAULT_EMAIL}
+      - MAIL_DEFAULT_NAME=${MAIL_DEFAULT_NAME}
+      # Auth
+      - AUTH_JWT_SECRET=${AUTH_JWT_SECRET}
+      - AUTH_JWT_TOKEN_EXPIRES_IN=${AUTH_JWT_TOKEN_EXPIRES_IN}
+      - AUTH_REFRESH_SECRET=${AUTH_REFRESH_SECRET}
+      - AUTH_REFRESH_TOKEN_EXPIRES_IN=${AUTH_REFRESH_TOKEN_EXPIRES_IN}
+      # Google Auth
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+
+volumes:
+  # redis_data:
